@@ -2,7 +2,18 @@ import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { prisma } from './prisma'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me'
+function requireEnv(name: string): string {
+  const val = process.env[name]
+  if (!val || val.trim() === '') {
+    throw new Error(
+      `Missing ${name} environment variable. ` +
+      `Set it in Vercel → Project → Settings → Environment Variables.`
+    )
+  }
+  return val
+}
+
+const JWT_SECRET = requireEnv('JWT_SECRET')
 
 export interface AdminPayload {
   id: string
