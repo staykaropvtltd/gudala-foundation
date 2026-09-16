@@ -18,7 +18,7 @@ export default async function StoriesPage() {
     where: { status: 'published' },
     orderBy: { createdAt: 'desc' },
     include: { program: true },
-  })
+  }).catch(() => [] as Awaited<ReturnType<typeof prisma.impactStory.findMany<{ include: { program: true } }>>>)
 
   const [featured, ...rest] = stories
 

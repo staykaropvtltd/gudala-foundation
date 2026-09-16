@@ -14,18 +14,22 @@ export const metadata: Metadata = {
 }
 
 async function getEvents() {
-  const now = new Date()
-  const [upcoming, past] = await Promise.all([
-    prisma.event.findMany({
-      where: { status: 'published', date: { gte: now } },
-      orderBy: { date: 'asc' },
-    }),
-    prisma.event.findMany({
-      where: { status: { in: ['completed', 'published'] }, date: { lt: now } },
-      orderBy: { date: 'desc' },
-    }),
-  ])
-  return { upcoming, past }
+  try {
+    const now = new Date()
+    const [upcoming, past] = await Promise.all([
+      prisma.event.findMany({
+        where: { status: 'published', date: { gte: now } },
+        orderBy: { date: 'asc' },
+      }),
+      prisma.event.findMany({
+        where: { status: { in: ['completed', 'published'] }, date: { lt: now } },
+        orderBy: { date: 'desc' },
+      }),
+    ])
+    return { upcoming, past }
+  } catch {
+    return { upcoming: [], past: [] }
+  }
 }
 
 export default async function EventsPage() {

@@ -15,34 +15,38 @@ import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic'
 
 async function getHomeData() {
-  const [settings, programs, events, stories, gallery] = await Promise.all([
-    prisma.siteSetting.findMany(),
-    prisma.program.findMany({
-      where: { status: 'published' },
-      orderBy: { order: 'asc' },
-      take: 6,
-    }),
-    prisma.event.findMany({
-      where: { status: 'published', date: { gte: new Date() } },
-      orderBy: { date: 'asc' },
-      take: 3,
-    }),
-    prisma.impactStory.findMany({
-      where: { status: 'published' },
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-    }),
-    prisma.galleryImage.findMany({
-      where: { status: 'published' },
-      orderBy: { order: 'asc' },
-      take: 8,
-    }),
-  ])
+  try {
+    const [settings, programs, events, stories, gallery] = await Promise.all([
+      prisma.siteSetting.findMany(),
+      prisma.program.findMany({
+        where: { status: 'published' },
+        orderBy: { order: 'asc' },
+        take: 6,
+      }),
+      prisma.event.findMany({
+        where: { status: 'published', date: { gte: new Date() } },
+        orderBy: { date: 'asc' },
+        take: 3,
+      }),
+      prisma.impactStory.findMany({
+        where: { status: 'published' },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+      }),
+      prisma.galleryImage.findMany({
+        where: { status: 'published' },
+        orderBy: { order: 'asc' },
+        take: 8,
+      }),
+    ])
 
-  const settingsMap: Record<string, string> = {}
-  settings.forEach((s) => (settingsMap[s.key] = s.value))
+    const settingsMap: Record<string, string> = {}
+    settings.forEach((s) => (settingsMap[s.key] = s.value))
 
-  return { settingsMap, programs, events, stories, gallery }
+    return { settingsMap, programs, events, stories, gallery }
+  } catch {
+    return { settingsMap: {}, programs: [], events: [], stories: [], gallery: [] }
+  }
 }
 
 export default async function HomePage() {

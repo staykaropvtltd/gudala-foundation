@@ -2,18 +2,16 @@ import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { prisma } from './prisma'
 
-function requireEnv(name: string): string {
-  const val = process.env[name]
-  if (!val || val.trim() === '') {
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
     throw new Error(
-      `Missing ${name} environment variable. ` +
-      `Set it in Vercel → Project → Settings → Environment Variables.`
+      'Missing JWT_SECRET environment variable. ' +
+      'Set it in Vercel → Project → Settings → Environment Variables.'
     )
   }
-  return val
+  return secret
 }
-
-const JWT_SECRET = requireEnv('JWT_SECRET')
 
 export interface AdminPayload {
   id: string
@@ -23,12 +21,12 @@ export interface AdminPayload {
 }
 
 export function signToken(payload: AdminPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: '7d' })
 }
 
 export function verifyToken(token: string): AdminPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as AdminPayload
+    return jwt.verify(token, getJwtSecret()) as AdminPayload
   } catch {
     return null
   }
