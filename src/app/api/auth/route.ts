@@ -20,12 +20,28 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: '/',
     })
 
     return response
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error('[/api/auth] Login error:', message)
+
+    if (message.includes('DATABASE_URL') || message.includes('database') || message.includes('ECONNREFUSED')) {
+      return NextResponse.json(
+        { error: 'Database not configured. Set DATABASE_URL in Vercel environment variables.' },
+        { status: 500 }
+      )
+    }
+    if (message.includes('JWT_SECRET')) {
+      return NextResponse.json(
+        { error: 'JWT_SECRET not configured. Set it in Vercel environment variables.' },
+        { status: 500 }
+      )
+    }
+
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
