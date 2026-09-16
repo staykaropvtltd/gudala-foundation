@@ -12,6 +12,8 @@ import GalleryPreviewSection from '@/components/sections/GalleryPreviewSection'
 import VolunteerBannerSection from '@/components/sections/VolunteerBannerSection'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 async function getHomeData() {
   const [settings, programs, events, stories, gallery] = await Promise.all([
     prisma.siteSetting.findMany(),

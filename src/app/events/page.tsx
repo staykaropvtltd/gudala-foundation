@@ -1,10 +1,12 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { prisma } from '@/lib/prisma'
 import { formatDate } from '@/lib/utils'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Events',
@@ -61,14 +63,18 @@ export default async function EventsPage() {
         <section className="section-padding bg-cream">
           <div className="container-wide">
             <div className="mb-12">
-              <p className="eyebrow mb-3">What's Coming Up</p>
+              <p className="eyebrow mb-3">What&apos;s Coming Up</p>
               <div className="divider-line" />
               <h2 className="heading-lg">Upcoming Events</h2>
             </div>
 
             {upcoming.length === 0 ? (
               <div className="text-center py-16 bg-warmgray-100">
-                <div className="text-5xl mb-4">ðŸ“…</div>
+                <div className="text-5xl mb-4 text-warmgray-300">
+                  <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
                 <h3 className="font-serif text-xl font-semibold text-warmgray-700 mb-2">
                   No upcoming events at this time
                 </h3>
@@ -109,7 +115,7 @@ export default async function EventsPage() {
                             <svg className="w-3.5 h-3.5 text-forest-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            {event.startTime} {event.endTime ? `â€” ${event.endTime}` : ''}
+                            {event.startTime} {event.endTime ? `– ${event.endTime}` : ''}
                           </div>
                           <div className="flex items-center gap-1.5">
                             <svg className="w-3.5 h-3.5 text-forest-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,7 +132,7 @@ export default async function EventsPage() {
                           href={`/events/${event.slug}`}
                           className="inline-flex items-center gap-2 text-forest-600 font-semibold text-sm uppercase tracking-wide hover:gap-3 transition-all"
                         >
-                          View Event â†’
+                          View Event &rarr;
                         </Link>
                       </div>
                     </div>
@@ -142,7 +148,7 @@ export default async function EventsPage() {
           <section className="section-padding bg-warmgray-100">
             <div className="container-wide">
               <div className="mb-12">
-                <p className="eyebrow mb-3">What We've Done</p>
+                <p className="eyebrow mb-3">What We&apos;ve Done</p>
                 <div className="divider-line" />
                 <h2 className="heading-lg">Past Events</h2>
               </div>
@@ -164,7 +170,7 @@ export default async function EventsPage() {
                     </div>
                     <div className="p-6">
                       <div className="text-xs text-warmgray-400 mb-2 font-medium">
-                        {formatDate(event.date)} â€¢ {event.location}
+                        {formatDate(event.date)} &bull; {event.location}
                       </div>
                       <h3 className="font-serif text-lg font-bold text-warmgray-800 mb-3 group-hover:text-forest-600 transition-colors">
                         {event.title}
@@ -176,7 +182,7 @@ export default async function EventsPage() {
                         href={`/events/${event.slug}`}
                         className="inline-flex items-center gap-2 text-forest-600 font-semibold text-sm hover:gap-3 transition-all"
                       >
-                        View Details â†’
+                        View Details &rarr;
                       </Link>
                     </div>
                   </div>

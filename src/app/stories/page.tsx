@@ -1,10 +1,12 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { prisma } from '@/lib/prisma'
 import { formatDateShort } from '@/lib/utils'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Impact Stories',
@@ -84,22 +86,22 @@ export default async function StoriesPage() {
                     Featured Story
                   </span>
                   <p className="font-serif text-xl md:text-2xl italic text-warmgray-400 mb-4">
-                    "Real People. Real Change. Real Hope."
+                    &ldquo;Real People. Real Change. Real Hope.&rdquo;
                   </p>
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-warmgray-900 mb-4 leading-tight">
                     {featured.title}
                   </h2>
                   <div className="flex items-center gap-3 text-xs text-warmgray-400 mb-5">
                     <span>{featured.location || 'India'}</span>
-                    <span>â€¢</span>
+                    <span>&bull;</span>
                     <span>{formatDateShort(featured.date)}</span>
-                    {featured.program && <><span>â€¢</span><span>{featured.program.title}</span></>}
+                    {featured.program && <><span>&bull;</span><span>{featured.program.title}</span></>}
                   </div>
                   <p className="text-warmgray-600 leading-relaxed mb-6 line-clamp-4">
                     {featured.excerpt}
                   </p>
                   <Link href={`/stories/${featured.slug}`} className="btn-primary self-start">
-                    Read Full Story â†’
+                    Read Full Story &rarr;
                   </Link>
                 </div>
               </div>
@@ -131,7 +133,7 @@ export default async function StoriesPage() {
                     </div>
                     <div className="p-6">
                       <div className="text-xs text-warmgray-400 mb-3">
-                        {story.location || 'India'} â€¢ {formatDateShort(story.date)}
+                        {story.location || 'India'} &bull; {formatDateShort(story.date)}
                       </div>
                       <h3 className="font-serif text-xl font-bold text-warmgray-900 mb-3 group-hover:text-forest-600 transition-colors leading-snug">
                         {story.title}
@@ -143,7 +145,7 @@ export default async function StoriesPage() {
                         href={`/stories/${story.slug}`}
                         className="inline-flex items-center gap-2 text-forest-600 font-semibold text-sm uppercase tracking-wide hover:gap-3 transition-all"
                       >
-                        Read More â†’
+                        Read More &rarr;
                       </Link>
                     </div>
                   </div>
