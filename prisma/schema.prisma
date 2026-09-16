@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  @@index([key])
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  content     String   @default("")
+  coverImage  String   @default("")
+  category    String
+  status      String   @default("published")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  events Event[]
+  stories ImpactStory[]
+
+  @@index([slug])
+  @@index([status])
+}
+
+model Event {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  description     String
+  content         String   @default("")
+  coverImage      String   @default("")
+  date            DateTime
+  startTime       String   @default("")
+  endTime         String   @default("")
+  location        String
+  address         String   @default("")
+  registrationLink String  @default("")
+  contactInfo     String   @default("")
+  status          String   @default("published")
+  programId       String?
+  program         Program? @relation(fields: [programId], references: [id])
+  images          EventImage[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([slug])
+  @@index([date])
+  @@index([status])
+}
+
+model EventImage {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String   @default("")
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model ImpactStory {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  coverImage  String   @default("")
+  location    String   @default("")
+  date        DateTime @default(now())
+  status      String   @default("published")
+  programId   String?
+  program     Program? @relation(fields: [programId], references: [id])
+  images      StoryImage[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([status])
+}
+
+model StoryImage {
+  id        String      @id @default(cuid())
+  url       String
+  caption   String      @default("")
+  storyId   String
+  story     ImpactStory @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  order     Int         @default(0)
+  createdAt DateTime    @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String   @default("")
+  category  String   @default("general")
+  altText   String   @default("")
+  status    String   @default("published")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([status])
+}
+
+model Volunteer {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String
+  city         String
+  interest     String
+  availability String
+  message      String   @default("")
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+}
+
+model Donation {
+  id            String   @id @default(cuid())
+  donorName     String
+  email         String
+  phone         String
+  panNumber     String   @default("")
+  amount        Float
+  currency      String   @default("INR")
+  status        String   @default("pending")
+  transactionId String   @default("")
+  notes         String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String   @default("")
+  subject   String
+  message   String
+  status    String   @default("unread")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String   @default("")
+  image     String   @default("")
+  order     Int      @default(0)
+  status    String   @default("published")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
